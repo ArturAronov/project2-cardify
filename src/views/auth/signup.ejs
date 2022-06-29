@@ -3,7 +3,7 @@
 <script>
   const generateForm = ({ user, errors } = {}) => {
     return `
-      <div class="container w-75">
+      <div class="container w-75 pt-5">
         <h3 class="text-center">
           Sign Up
         </h3>
@@ -71,7 +71,7 @@
           >
           <div class="invalid-feedback">${errors?.passwordConfirmation || ''}</div>
           <div class="row justify-content-center">
-            <button type="submit" class="btn btn-outline-info m-2" style='width: 100px'>Submit</button>
+            <button class="btn btn-primary m-2" type="submit" style='width: 100px'>Submit</button>
           </div>
         </form>
       </div>

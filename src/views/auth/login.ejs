@@ -3,18 +3,10 @@
 <script>
   const generateForm = ({user, errors} = {}) => {
     return `
-      <div class="container w-75">
-        <div id='welcome-title' class='text-center'>
-          <h1>
-            Welcome
-          </h1>
-          <h1>
-            to
-          </h1>
-          <h1>
-            Cardify
-          </h1>
-        </div>
+      <div class="container w-75 pt-5">
+        <h3 class="text-center">
+          Login
+        </h3>
         <form id="login-form">
           <label
             for="email-login"
@@ -48,8 +40,7 @@
           >
           <div class="invalid-feedback">${errors?.password || ''}</div>
           <div class="row justify-content-center">
-            <button type="button" class="btn btn-outline-info m-2" style='width: 100px'>Signup</button>
-           <button class="btn btn-primary m-2" type="submit" style='width: 100px'>Login</button>
+           <button class="btn btn-primary m-2" type="submit" style='width: 100px'>Submit</button>
           </div>
         </form>
       </div>
@@ -66,7 +57,7 @@
       url: '/api/auth/login',
       data
     }).then(() => {
-      window.location.href = `/my/collections`
+      window.location.href = `/`
     }).catch((err) => {
       generatePage({
         user: parseFormData(data),
