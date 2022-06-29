@@ -10,9 +10,14 @@ router.delete('/api/auth/logout', (await import('./controllers/api/auth/logout.j
 
 router.post('/api/my/collections', (await import('./controllers/api/my/collections/create.js')).default)
 
+// API | MY PROFILE | AUTH REQUIRED
+router.get('/api/my/profile', authenticateUser('json'), (await import('./controllers/api/my/profile/show.js')).default)
+
+// PAGES | INDEX
+router.get('/', (await import('./controllers/pages/show.js')).default)
 // PAGES | AUTH
-router.get('/', (await import('./controllers/pages/auth/login.js')).default)
-router.get('/signup', (await import('./controllers/pages/auth/signup.js')).default)
+router.get('/auth/login', (await import('./controllers/pages/auth/login.js')).default)
+router.get('/auth/signup', (await import('./controllers/pages/auth/signup.js')).default)
 
 // PAGES | PROFILE | AUTH REQUIRED
 router.get('/my/profile', authenticateUser('html'), (await import('./controllers/pages/my/profile/show.js')).default)

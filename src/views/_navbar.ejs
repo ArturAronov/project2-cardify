@@ -1,0 +1,56 @@
+<script>
+  const replaceDynamicLinks = ({ user } = {}) => {
+    $('#navbar-dynamic-links').html(user ? `
+    <a class="nav-link text-light" href="/my/collections">Collections</a>
+    <a class="nav-link text-light" href="/my/play">Play</a>
+    <a class="nav-link text-light" href="/my/profile">Profile</a>
+    <a class="nav-link text-light" href="/" id="auth-logout">Sign Out</a>
+    ` : `
+    <a class="nav-link text-light" href="/auth/login">Login</a>
+    <a class="nav-link text-light" href="/auth/signup">Signup</a>
+    `)
+  }
+
+  const getMyProfile = () => {
+    replaceDynamicLinks()
+    axios({
+      method: 'GET',
+      url: '/api/my/profile',
+    }).then((resp) => {
+      replaceDynamicLinks({ user: resp.data })
+    }).catch(() => {
+      replaceDynamicLinks()
+    })
+  }
+
+  const handleLogout = (e) => {
+    e.preventDefault()
+    axios({
+      method: 'DELETE',
+      url: '/api/auth/logout'
+    }).then(() => {
+      window.location.href = '/'
+    })
+  }
+
+  $(document).ready(() => {
+    getMyProfile()
+    $('body').on('click', '#auth-logout', handleLogout)
+  })
+</script>
+<nav class="navbar navbar-dark navbar-expand-sm bg-secondary">
+  <div class="container-fluid">
+    <a class="navbar-brand text-light" href="/my/collections">
+      <div class="display-6">
+        Cardify
+      </div></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div id="navbar-dynamic-links" class="navbar-nav ms-auto float-right text-right pr-3">
+      </div>
+    </div>
+  </div>
+</nav>

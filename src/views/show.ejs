@@ -1,0 +1,45 @@
+<%- contentFor('styles') %>
+<%- contentFor('scripts') %>
+<script>
+  const replaceDynamicTitle = ({ user } = {}) => {
+     $('#body-dynamic-title').html(user ? `
+     <div>
+      <h1 class="text-center pb-4">
+        Welcome Back
+      </h1>
+      <h3 class="text-center">
+         ${user.name}!
+      </h3>
+    ` : `
+      <div class="text-center">
+        <h1>
+          Welcome
+        </h1>
+        <h1>
+          to
+        </h1>
+        <h1>
+          Cardify
+        </h1>
+      </div>
+    `)
+  }
+
+  const updateTitle = () => {
+    replaceDynamicTitle()
+    axios({
+      method: 'GET',
+      url: '/api/my/profile',
+    }).then((resp) => {
+      replaceDynamicTitle({ user: resp.data })
+    }).catch(() => {
+      replaceDynamicTitle()
+    })
+  }
+
+  $(document).ready(() => {
+    updateTitle()
+  })
+</script>
+<%- contentFor('body') %>
+<div id="body-dynamic-title" class="d-flex justify-content-center align-items-center" style="height: 80vh"></div>
