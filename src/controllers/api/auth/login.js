@@ -6,7 +6,7 @@ import _ from 'lodash'
 import handleErrors from '../../_helpers/handle-errors.js'
 import prisma from '../../_helpers/prisma.js'
 
-// Is it still necessary to validate the input if the input will be validated with the database regardless?
+// This is necessary to provide accurate error messages if any of the values are wrong
 const loginSchema = yup.object({
   // Validate that user enters email address
   email: yup.string().email().required(),
@@ -16,11 +16,12 @@ const loginSchema = yup.object({
 })
 
 const authenticate = (req, res, next) => {
-  // What is happening here?
   passport.use(new LocalStrategy({
+    // email and password keys in the database get assigned to passport's values. Passport will automatically retrieve those values from the body
     usernameField: 'email',
     passwordField: 'password',
     session: false
+    // email and password are values, done is a function
   }, async (email, password, done) => {
     try {
       // Validate if the email exists in the database and return the user data
@@ -37,6 +38,8 @@ const authenticate = (req, res, next) => {
     } catch (err) {
       return done(err)
     }
+
+    // done callback function gets executed
   })).authenticate('local', async (err, user, info) => {
     // Should there be issus retrieving user data from database, return 500 Internal Server Error
     if (err) return res.status(500).end(err.toString())
@@ -49,8 +52,6 @@ const authenticate = (req, res, next) => {
     await req.session.save()
 
     return res.status(200).json(user)
-
-    // What's happening here????
   })(req, res, next)
 }
 
