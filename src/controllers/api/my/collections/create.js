@@ -1,19 +1,36 @@
+import yup from 'yup'
 import prisma from '../../../_helpers/prisma.js'
+import handleErrors from '../../../_helpers/handle-errors.js'
+
+const collectionSchema = yup.object({
+  // Validate that user entered the title
+  title: yup.string().required().test({
+    message: () => 'Please enter the Collection title',
+    test: (value) => value
+  }),
+  description: yup.string()
+})
 
 const controllersApiMyCollectionsCreate = async (req, res) => {
   try {
+    const verifiedData = await collectionSchema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true
+    })
+
     const newCollection = await prisma.collection.create({
       data: {
-        title: req.body.title,
-        userId: req.session.user.id
+        userId: req.session.user.id,
+        title: verifiedData.title,
+        description: verifiedData.description
       }
     })
 
     // return res.send(newCollection)
 
     return res.json(newCollection)
-  } catch (error) {
-    return res.send(error.message)
+  } catch (err) {
+    return handleErrors(res, err)
   }
 }
 
