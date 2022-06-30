@@ -8,7 +8,7 @@ const controllersApiMyCollectionsShow = async (req, res) => {
       },
       rejectOnNotFound: true
     })
-    console.log(foundCollection)
+
     return res.status(201).json(foundCollection)
   } catch (error) {
     return res.send(error.message)

@@ -36,7 +36,6 @@ const getUserData = () => {
     method: 'GET',
     url: '/api/my/profile'
   }).then(res => {
-    console.log(res.data)
     generatePage({ user: res.data })
   }).catch(err => {
     console.log(err)
