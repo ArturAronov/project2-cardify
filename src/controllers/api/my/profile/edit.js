@@ -50,10 +50,14 @@ const controllersApiMyProfileEdit = async (req, res) => {
     // Retrieve existing user data from the database
     const dbData = await prisma.user.findUnique({
       where: {
+        // Retrieve user id from the session id cookie
         id: req.session.user.id
       }
     })
+
+    // Update existing user with new values
     const editUser = await prisma.user.update({
+      // Retrieve user id from the session id cookie
       where: {
         id: req.session.user.id
       },
@@ -66,12 +70,15 @@ const controllersApiMyProfileEdit = async (req, res) => {
       }
     })
 
+    // Re-assign user cookie to the id from the updated schema
     req.session.user = {
       id: editUser.id
     }
 
+    // Save the session
     await req.session.save()
 
+    // Set status to 201 and omit the password hash
     return res.status(201).json(_.omit(editUser, ['passwordHash']))
   } catch (err) {
     return handleErrors(res, err)
