@@ -4,7 +4,8 @@ const controllersApiMyCollectionsCreate = async (req, res) => {
   try {
     const newCollection = await prisma.collection.create({
       data: {
-        title: req.body.title
+        title: req.body.title,
+        userId: req.session.user.id
       }
     })
 
@@ -12,7 +13,7 @@ const controllersApiMyCollectionsCreate = async (req, res) => {
 
     return res.json(newCollection)
   } catch (error) {
-    await res.send(error.message)
+    return res.send(error.message)
   }
 }
 

@@ -10,6 +10,7 @@ router.delete('/api/auth/logout', (await import('./controllers/api/auth/logout.j
 
 // API | COLLECTIONS | AUTH REQUIRED
 router.post('/api/my/collections', authenticateUser('json'), (await import('./controllers/api/my/collections/create.js')).default)
+router.get('/api/my/collections', authenticateUser('json'), (await import('./controllers/api/my/collections/show.js')).default)
 
 // API | MY PROFILE | AUTH REQUIRED
 router.get('/api/my/profile', authenticateUser('json'), (await import('./controllers/api/my/profile/show.js')).default)
@@ -36,7 +37,7 @@ router.get('/my/collections/:id/new', authenticateUser('html'), (await import('.
 router.get('/flashcards/:id/edit', authenticateUser('html'), (await import('./controllers/pages/my/flashcards/edit.js')).default)
 
 // PAGES | PLAY | AUTH REQUIRED
-router.get('/my/collection:id/play', authenticateUser('html'), (await import('./controllers/pages/my/collections/play.js')).default)
+router.get('/my/collection/:id/play', authenticateUser('html'), (await import('./controllers/pages/my/collections/play.js')).default)
 router.get('/my/play', authenticateUser('html'), (await import('./controllers/pages/my/play.js')).default)
 
 // PAGES | PAGE NOT FOUND
