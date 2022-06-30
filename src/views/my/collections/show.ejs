@@ -8,15 +8,15 @@
         <div class="mt-5">
           ${collection.map(element => {
             return `
-            <div class="card text-center" style="width: 18rem;">
+            <span class="card text-center" style="width: 18rem;">
               <div class="card-body">
                 <h5 class="card-title">${element.title}</h5>
-                <p class="card-text">Description goes here.</p>
+                <p class="card-text">${element.description || ''}</p>
                 <a href="/my/collection/${element.id}/play" class="card-link">Play</a>
                 <a href="/my/collections/${element.id}/flashcards" class="card-link">Flashcards</a>
                 <a href="/my/collections/${element.id}/edit" class="card-link">Edit</a>
               </div>
-            </div>
+            </span>
             `
           })}
         </div>
