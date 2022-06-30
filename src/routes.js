@@ -13,6 +13,7 @@ router.post('/api/my/collections', authenticateUser('json'), (await import('./co
 
 // API | MY PROFILE | AUTH REQUIRED
 router.get('/api/my/profile', authenticateUser('json'), (await import('./controllers/api/my/profile/show.js')).default)
+router.put('/api/my/profile/edit', authenticateUser('json'), (await import('./controllers/api/my/profile/edit.js')).default)
 
 // PAGES | INDEX
 router.get('/', (await import('./controllers/pages/show.js')).default)
