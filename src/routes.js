@@ -28,7 +28,7 @@ router.get('/my/profile/edit', authenticateUser('html'), (await import('./contro
 
 // PAGES | COLLECTIONS | AUTH REQUIRED
 router.get('/my/collections', authenticateUser('html'), (await import('./controllers/pages/my/collections/show.js')).default)
-router.get('/my/collections/new', authenticateUser('html'), (await import('./controllers/pages/my/collections/new.js')).default)
+router.get('/my/collections/new', authenticateUser('html'), (await import('./controllers/pages/my/collections/create.js')).default)
 router.get('/my/collections/:id/edit', authenticateUser('html'), (await import('./controllers/pages/my/collections/edit.js')).default)
 
 // PAGES | FLASHCARDS | AUTH REQUIRED

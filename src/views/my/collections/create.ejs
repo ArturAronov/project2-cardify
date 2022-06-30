@@ -1,0 +1,78 @@
+<%- contentFor('styles') %>
+  <%- contentFor('scripts') %>
+    <script>
+      const generateForm = ({ user, errors } = {}) => {
+        return `
+          <div class="container w-75 pt-5">
+            <h3 class="text-center">
+              New Collection
+            </h3>
+            <form id="new-collection-form">
+              <label
+                for="name-collection"
+                class="form-label m-0 pt-3"
+                >
+                  Collection Name (required)
+                </label>
+              <input
+                type="text"
+                id="name-collection"
+                class="form-control ${errors?.title && 'is-invalid'}"
+                name="title"
+                value="${user?.title || ''}"
+                aria-describedby="inputGroup-sizing-default"
+              >
+              <div class="invalid-feedback">${errors?.title || ''}</div>
+
+              <label
+                for="name-collection"
+                class="form-label m-0 pt-3"
+                >
+                  Description
+                </label>
+              <textarea
+                class="form-control" id="name-collection"
+                name="description"
+                rows="2">
+                </textarea>
+              <div class="invalid-feedback">${errors?.description || ''}</div>
+
+              <div class="row justify-content-center">
+                <button class="btn btn-primary m-2" type="submit" style='width: 100px'>Submit</button>
+              </div>
+            </form>
+          </div>
+        `
+      }
+
+      const handleSubmit = e => {
+        e.preventDefault()
+        const data = new FormData(e.target)
+        console.log('here')
+        axios({
+          method: 'POST',
+          url: '/api/my/collections',
+          data
+        }).then(() => {
+          window.location.href = `/my/collections`
+        }).catch((err) => {
+          generatePage({
+            user: parseFormData(data),
+            errors: err.response.data
+          })
+        })
+      }
+
+      const generatePage = info => {
+        const $page = $('#pages-collection-new')
+        const $form = generateForm(info)
+        $page.html('').append($form)
+      }
+
+      $(document).ready(() => {
+        generatePage()
+        $('#pages-collection-new').on('submit', '#new-collection-form', handleSubmit)
+      })
+    </script>
+    <%- contentFor('body') %>
+      <div id="pages-collection-new" class="container"></div>
