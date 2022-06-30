@@ -78,10 +78,9 @@
     `
   }
 
-  const handleSignup = (e) => {
+  const handleSignup = e => {
     e.preventDefault()
     const data = new FormData(e.target)
-    console.log(parseFormData(data))
     $('#signup-form button[type="submit"]').attr('disabled', true)
     axios({
       method: 'POST',
@@ -97,7 +96,7 @@
     })
   }
 
-  const generatePage = (info) => {
+  const generatePage = info => {
     const $page = $('#pages-auth-signup')
     const $form = generateForm(info)
     $page.html('').append($form)
