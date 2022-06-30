@@ -1,4 +1,58 @@
 <%- contentFor('styles') %>
 <%- contentFor('scripts') %>
+<script>
+const generateProfile = ({user} = {}) => {
+  return `
+    <div class="container d-flex justify-content-center row">
+      <h3 class="text-center pt-5">${user.name}</h3>
+      <div class="w-75">
+        <img src=${user.avatar}/>
+        <table class="table-responsive table-borderless w-100">
+          <tbody>
+            <tr>
+              <td>Email: </td>
+              <td>${user.email}</td>
+            </tr>
+            <tr>
+              <td>Total Collections: </td>
+              <td>${user.totalCollections}</td>
+            </tr>
+            <tr>
+              <td>Total Flashcards: </td>
+              <td>${user.totalFashcards}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row justify-content-center pt-5">
+        <a class="btn btn-primary" href="/my/profile/edit" role="button" style="width: 88px">Edit</a>
+      </div>
+    </div>
+      `
+}
+
+const getUserData = () => {
+  axios({
+    method: 'GET',
+    url: '/api/my/profile'
+  }).then(res => {
+    console.log(res.data)
+    generatePage({ user: res.data })
+  }).catch(err => {
+    console.log(err)
+  })
+}
+
+const generatePage = info => {
+  const $page = $('#pages-my-profile')
+  const $profile = generateProfile(info)
+  $page.html('').append($profile)
+}
+
+$(document).ready(() => {
+  getUserData()
+
+})
+</script>
 <%- contentFor('body') %>
-<div id="pages-auth-login" class="container">Show Profile</div>
+<div id="pages-my-profile" class="container"></div>

@@ -8,7 +8,8 @@ router.post('/api/auth/signup', (await import('./controllers/api/auth/signup.js'
 router.post('/api/auth/login', (await import('./controllers/api/auth/login.js')).default)
 router.delete('/api/auth/logout', (await import('./controllers/api/auth/logout.js')).default)
 
-router.post('/api/my/collections', (await import('./controllers/api/my/collections/create.js')).default)
+// API | COLLECTIONS | AUTH REQUIRED
+router.post('/api/my/collections', authenticateUser('json'), (await import('./controllers/api/my/collections/create.js')).default)
 
 // API | MY PROFILE | AUTH REQUIRED
 router.get('/api/my/profile', authenticateUser('json'), (await import('./controllers/api/my/profile/show.js')).default)
