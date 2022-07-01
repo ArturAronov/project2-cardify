@@ -6,6 +6,9 @@ const controllersApiMyCollectionsShow = async (req, res) => {
       where: {
         userId: req.session.user.id
       },
+      orderBy: {
+        id: 'asc'
+      },
       rejectOnNotFound: true
     })
 

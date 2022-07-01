@@ -2,16 +2,37 @@ import yup from 'yup'
 import prisma from '../../../_helpers/prisma.js'
 import handleErrors from '../../../_helpers/handle-errors.js'
 
+const editSchema = yup.object({
+  title: yup.string(),
+  description: yup.string()
+})
+
 const controllersApiMyCollectionsEdit = async (req, res) => {
   try {
     const paramId = await parseInt(req.params.id)
-    const data = await prisma.collection.findUnique({
+
+    const verifiedEditSchema = await editSchema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true
+    })
+
+    const currentSchema = await prisma.collection.findUnique({
       where: {
         id: paramId
       }
     })
 
-    return res.json(data)
+    const editCollection = await prisma.collection.update({
+      where: {
+        id: paramId
+      },
+      data: {
+        title: verifiedEditSchema.title || currentSchema.title,
+        description: verifiedEditSchema.description || currentSchema.description
+      }
+    })
+
+    return res.status(201).json(editCollection)
   } catch (err) {
     return handleErrors(res, err)
   }

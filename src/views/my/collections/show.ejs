@@ -5,20 +5,20 @@
     return `
       <div>
         <h3 class="text-center pt-5">Collections</h3>
-        <div class="mt-5 d-flex ">
+        <div class="mt-5 d-flex">
           ${collection.map(element => {
             return `
-            <span class="card text-center m-2" style="width: 18rem;">
-              <div class="card-body">
-                <h5 class="card-title">${element.title}</h5>
-                <p class="card-text">${element.description || ''}</p>
-                <div>
-                  <a href="/my/collection/${element.id}/play" class="card-link">Play</a>
-                  <a href="/my/collections/${element.id}/flashcards" class="card-link">Flashcards</a>
-                  <a href="/my/collections/${element.id}/edit" class="card-link">Edit</a>
+              <span class="card text-center m-2" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">${element.title}</h5>
+                  <p class="card-text">${element.description || ''}</p>
+                  <div>
+                    <a href="/my/collection/${element.id}/play" class="card-link">Play</a>
+                    <a href="/my/collections/${element.id}/flashcards" class="card-link">Flashcards</a>
+                    <a href="/my/collections/${element.id}/edit" class="card-link">Edit</a>
+                  </div>
                 </div>
-              </div>
-            </span>
+              </span>
             `
           })}
         </div>
