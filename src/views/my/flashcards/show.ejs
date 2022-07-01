@@ -4,9 +4,38 @@
     const paramValue = window.location.pathname.split('/').reverse()[1]
 
     const generateFlashcards = (flashcards = {}) => {
+      console.log(flashcards)
       return `
-    <div>
+    <div class="container d-flex justify-content-center row">
       <h3 class="text-center pt-5">Flashcards</h3>
+      <div class="accordion accordion-flush w-75 mt-5" id="accordionFlushExample">
+        <div class="accordion-item">
+          ${flashcards.map(element => {
+            return `
+              <h2 class="accordion-header" id="flush-headingOne-${element.id}">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#flush-collapseOne-${element.id}"
+                  aria-expanded="false"
+                  aria-controls="flush-collapseOne-${element.id}">
+                    ${element.question}
+                </button>
+              </h2>
+              <div
+                id="flush-collapseOne-${element.id}"
+                class="accordion-collapse collapse"
+                aria-labelledby="flush-headingOne-${element.id}"
+                data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                  ${element.answer}
+                </div>
+              </div>
+            `
+          })}
+        </div>
+      </div>
       <div class="row justify-content-center pt-5">
         <a class="btn btn-primary" href="/my/collections/${paramValue}/new" role="button" style="width: 188px">Add Flashcard</a>
       </div>
@@ -18,8 +47,9 @@
     const getFlashcardsData = () => {
       axios({
         method: 'GET',
-        url: '/api/my/flashcards'
+        url: `/api/collections/${paramValue}/flashcards`
       }).then(res => {
+        // console.log(res.data)
         generatePage(res.data)
       }).catch(err => {
         console.log(err)
