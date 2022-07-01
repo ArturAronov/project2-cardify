@@ -29,28 +29,66 @@
                 Description
               </label>
             <textarea
-              class="form-control" id="name-collection"
+              class="form-control"
+              id="name-collection"
               name="description"
               rows="2"></textarea>
             <div class="row justify-content-center">
-
-              <button id="submit" class="btn btn-primary m-2" type="submit" style='width: 100px'>Submit</button>
-            </div>
+              <button id="submit" class="btn btn-primary m-2" type="submit" style='width: 150px'>Submit</button>
+              </div>
           </form>
-          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="d-flex row justify-content-center">
+            <button
+              id="delete"
+              class="btn btn-danger m-2"
+              style='width: 150px'
+              data-bs-toggle="modal"
+              data-bs-target="#deleteCollectionModal">
+                Delete Collection
+            </button>
+          </div>
+          <!-- Modal -->
+            <div class="modal fade" id="deleteCollectionModal" tabindex="-1" aria-labelledby="deleteCollectionModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCollectionModalLabel">🚨 Delete Collection 🚨</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    WARNING! By Clicking 'Delete Collection', your collection will be permanently deleted.
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="delete-button" type="button" class="btn btn-danger">Delete Collection</button>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       `
     }
 
+    const deleteCollectionBtn = e => {
+      e.preventDefault()
+      const paramValue = window.location.pathname.split('/').reverse()[1]
+
+      axios({
+        method: 'DELETE',
+        url: '/api/my/collections/' + paramValue,
+      }).then(() => {
+        window.location = '/my/collections'
+      })
+    }
 
     const submitEdit = e => {
       e.preventDefault();
       const data = new FormData(e.target)
-      const paramValue = window.location.pathname.split('/').reverse()[1];
+      const paramValue = window.location.pathname.split('/').reverse()[1]
 
       axios({
         method: 'PUT',
-        url: '/api/my/collections/'+paramValue,
+        url: '/api/my/collections/' + paramValue,
         data
       }).then(() => {
         window.location = '/my/collections'
@@ -65,9 +103,10 @@
       $page.html('').append($editCollections)
     }
 
-    $(document).ready(() => {
-      generatePage()
-      $('#pages-collections-edit').on('submit', '#edit-collection-form', submitEdit)
+    $(document).ready(async () => {
+      await generatePage()
+      await $('#pages-collections-edit').on('submit', '#edit-collection-form', submitEdit)
+      await $('#pages-collections-edit').on('click', '#delete-button', deleteCollectionBtn)
     })
 </script>
 <%- contentFor('body') %>

@@ -12,6 +12,7 @@ router.delete('/api/auth/logout', (await import('./controllers/api/auth/logout.j
 router.post('/api/my/collections', authenticateUser('json'), (await import('./controllers/api/my/collections/create.js')).default)
 router.get('/api/my/collections', authenticateUser('json'), (await import('./controllers/api/my/collections/show.js')).default)
 router.put('/api/my/collections/:id', authenticateUser('json'), (await import('./controllers/api/my/collections/edit.js')).default)
+router.delete('/api/my/collections/:id', authenticateUser('json'), (await import('./controllers/api/my/collections/delete.js')).default)
 
 // API | MY PROFILE | AUTH REQUIRED
 router.get('/api/my/profile', authenticateUser('json'), (await import('./controllers/api/my/profile/show.js')).default)
