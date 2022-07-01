@@ -1,4 +1,40 @@
 <%- contentFor('styles') %>
 <%- contentFor('scripts') %>
+  <script>
+    const paramValue = window.location.pathname.split('/').reverse()[1]
+
+    const generateFlashcards = (flashcards = {}) => {
+      return `
+    <div>
+      <h3 class="text-center pt-5">Flashcards</h3>
+      <div class="row justify-content-center pt-5">
+        <a class="btn btn-primary" href="/my/collections/${paramValue}/new" role="button" style="width: 188px">Add Flashcard</a>
+      </div>
+    </div>
+  `
+    }
+
+
+    const getFlashcardsData = () => {
+      axios({
+        method: 'GET',
+        url: '/api/my/flashcards'
+      }).then(res => {
+        generatePage(res.data)
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+
+    const generatePage = info => {
+      const $page = $('#pages-flashcards-show')
+      const $flashcards = generateFlashcards(info)
+      $page.html('').append($flashcards)
+    }
+
+    $(document).ready(() => {
+      getFlashcardsData()
+    })
+  </script>
 <%- contentFor('body') %>
-<div id="pages-auth-login" class="container">Flashcards Index</div>
+<div id="pages-flashcards-show" class="container"></div>

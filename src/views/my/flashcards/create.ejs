@@ -1,0 +1,77 @@
+<%- contentFor('styles') %>
+<%- contentFor('scripts') %>
+  <script>
+    const paramValue = window.location.pathname.split('/').reverse()[1]
+
+    const generateNewFlashcard = ({ flashcards, errors } = {}) => {
+      return `
+        <div class="container w-75 pt-5">
+          <h3 class="text-center pt-5">New Flashcard</h3>
+          <form id="new-flashcard-form">
+              <label
+                for="question-flashcard"
+                class="form-label m-0 pt-3"
+                >
+                  Question (required)
+                </label>
+              <input
+                type="text"
+                id="question-flashcard"
+                class="form-control ${errors?.question && 'is-invalid'}"
+                name="question"
+                aria-describedby="inputGroup-sizing-default"
+              >
+              <div class="invalid-feedback">${errors?.question || ''}</div>
+
+              <label
+                for="answer-flashcard"
+                class="form-label m-0 pt-3"
+                >
+                  Answer (required)
+                </label>
+              <input
+                type="text"
+                id="answer-flashcard"
+                class="form-control ${errors?.answer && 'is-invalid'}"
+                name="answer"
+                aria-describedby="inputGroup-sizing-default"
+              >
+              <div class="invalid-feedback">${errors?.answer || ''}</div>
+
+              <div class="row justify-content-center">
+                <button class="btn btn-primary m-2" type="submit" style='width: 100px'>Submit</button>
+              </div>
+            </form>
+        </div>
+      `
+    }
+
+
+    const handleSubmit = e => {
+      e.preventDefault()
+      const data = new FormData(e.target)
+
+      axios({
+        method: 'POST',
+        url: `/api/collections/${paramValue}/flashcards`,
+        data
+      }).then(res => {
+        window.location.href = `/my/collections/${paramValue}/flashcards`
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+
+    const generatePage = info => {
+      const $page = $('#pages-flashcards-new')
+      const $flashcards = generateNewFlashcard(info)
+      $page.html('').append($flashcards)
+    }
+
+    $(document).ready(() => {
+      generatePage()
+      $('#pages-flashcards-new').on('submit', '#new-flashcard-form', handleSubmit)
+    })
+  </script>
+<%- contentFor('body') %>
+<div id="pages-flashcards-new" class="container"></div>
