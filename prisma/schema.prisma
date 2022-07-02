@@ -27,22 +27,22 @@ model Collection {
   title       String
   description String?
   dateCreated DateTime  @default(now())
-  dateUpdated DateTime?
-  createdBy   User?     @relation(fields: [userId], references: [id])
-  userId      Int?
+  dateUpdated DateTime? @default(now())
+  createdBy   User      @relation(fields: [userId], references: [id])
+  userId      Int
   Card        Card[]
 }
 
 model Card {
-  id           Int         @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   question     String
   answer       String
-  right        Int         @default(0)
-  wrong        Int         @default(0)
-  dateCreated  DateTime    @default(now())
-  dateUpdated  DateTime?
-  createdBy    User?       @relation(fields: [userId], references: [id])
-  userId       Int?
-  collection   Collection? @relation(fields: [collectionId], references: [id])
-  collectionId Int?
+  right        Int        @default(0)
+  wrong        Int        @default(0)
+  dateCreated  DateTime   @default(now())
+  dateUpdated  DateTime?  @default(now())
+  createdBy    User       @relation(fields: [userId], references: [id])
+  userId       Int
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId Int
 }
