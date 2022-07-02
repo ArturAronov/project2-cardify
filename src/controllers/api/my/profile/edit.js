@@ -1,4 +1,3 @@
-import moment from 'moment'
 import yup from 'yup'
 import bcrypt from 'bcrypt'
 import _ from 'lodash'
