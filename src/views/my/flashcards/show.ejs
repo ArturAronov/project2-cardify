@@ -4,37 +4,71 @@
     const paramValue = window.location.pathname.split('/').reverse()[1]
 
     const generateFlashcards = (flashcards = {}) => {
-      console.log(flashcards)
       return `
     <div class="container d-flex justify-content-center row">
       <h3 class="text-center pt-5">Flashcards</h3>
-      <div class="accordion accordion-flush w-75 mt-5" id="accordionFlushExample">
-        <div class="accordion-item">
-          ${flashcards.map(element => {
-            return `
-              <h2 class="accordion-header" id="flush-headingOne-${element.id}">
+
+      <div class="accordion w-75" id="accordionPanelsStayOpenExample">
+        ${flashcards.map(element => {
+          const {
+            id,
+            question,
+            answer,
+            right,
+            wrong,
+            dateCreated,
+            dateEdited
+          } = element
+
+          return `
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingOne-${id}">
                 <button
                   class="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
-                  data-bs-target="#flush-collapseOne-${element.id}"
+                  data-bs-target="#panelsStayOpen-collapseOne-${id}"
                   aria-expanded="false"
-                  aria-controls="flush-collapseOne-${element.id}">
-                    ${element.question}
+                  aria-controls="panelsStayOpen-collapseOne-${id}">
+                    ${question}
                 </button>
               </h2>
               <div
-                id="flush-collapseOne-${element.id}"
-                class="accordion-collapse collapse"
-                aria-labelledby="flush-headingOne-${element.id}"
-                data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
-                  ${element.answer}
+                id="panelsStayOpen-collapseOne-${id}"
+                class="accordion-collapse collapse m-3"
+                aria-labelledby="panelsStayOpen-headingOne-${id}">
+                <div class="accordion-body p-0">
+                  <table class="table table-borderless">
+                    <tr>
+                      <td class="w-100 card-body">
+                        <h6>
+                          ${answer}
+                        </h6>
+                        <div>
+                          Right Answers: ${right}
+                        </div>
+                        <div>
+                          Wrong Answers: ${wrong}
+                        </div>
+                        <div>
+                          Date created: ${moment(dateCreated).format("Do MMMM YYYY, dddd, hh:mm A")}
+                        </div>
+                        <div>
+                          Date edited: ${dateEdited === dateEdited ? ' - ' : moment(dateEdited).format("Do MMMM YYYY, dddd, hh:mm A")}
+                        </div>
+                      </td>
+                      <td>
+                        <a href="/my/collections/4/flashcards/${id}/" class="btn btn-outline-primary" role="button">
+                          Edit
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               </div>
+            </div>
             `
           })}
-        </div>
       </div>
       <div class="row justify-content-center pt-5">
         <a class="btn btn-primary" href="/my/collections/${paramValue}/new" role="button" style="width: 188px">Add Flashcard</a>
@@ -49,7 +83,6 @@
         method: 'GET',
         url: `/api/collections/${paramValue}/flashcards`
       }).then(res => {
-        // console.log(res.data)
         generatePage(res.data)
       }).catch(err => {
         console.log(err)
