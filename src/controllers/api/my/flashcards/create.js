@@ -1,4 +1,5 @@
 import yup from 'yup'
+import moment from 'moment'
 import prisma from '../../../_helpers/prisma.js'
 import handleErrors from '../../../_helpers/handle-errors.js'
 
@@ -33,7 +34,8 @@ const controllersApiMyFlashcardsCreate = async (req, res) => {
         question: verifiedData.question,
         answer: verifiedData.answer,
         userId: collection.userId,
-        collectionId: paramId
+        collectionId: paramId,
+        dateCreated: new Date()
       }
     })
 

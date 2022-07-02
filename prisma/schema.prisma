@@ -18,6 +18,8 @@ model User {
   passwordHash     String
   totalCollections Int          @default(0)
   totalFashcards   Int          @default(0)
+  dateCreated      DateTime?
+  dateUpdated      DateTime?
   Card             Card[]
   Collection       Collection[]
 }
@@ -26,8 +28,8 @@ model Collection {
   id          Int       @id @default(autoincrement())
   title       String
   description String?
-  dateCreated DateTime  @default(now())
-  dateUpdated DateTime? @default(now())
+  dateCreated DateTime?
+  dateUpdated DateTime?
   createdBy   User      @relation(fields: [userId], references: [id])
   userId      Int
   Card        Card[]
@@ -39,8 +41,8 @@ model Card {
   answer       String
   right        Int        @default(0)
   wrong        Int        @default(0)
-  dateCreated  DateTime   @default(now())
-  dateUpdated  DateTime?  @default(now())
+  dateCreated  DateTime?
+  dateUpdated  DateTime?
   createdBy    User       @relation(fields: [userId], references: [id])
   userId       Int
   collection   Collection @relation(fields: [collectionId], references: [id])

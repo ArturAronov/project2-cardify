@@ -1,4 +1,5 @@
 import yup from 'yup'
+import moment from 'moment'
 import prisma from '../../../_helpers/prisma.js'
 import handleErrors from '../../../_helpers/handle-errors.js'
 
@@ -22,7 +23,8 @@ const controllersApiMyCollectionsCreate = async (req, res) => {
       data: {
         userId: req.session.user.id,
         title: verifiedData.title,
-        description: verifiedData.description
+        description: verifiedData.description,
+        dateCreated: new Date()
       }
     })
 

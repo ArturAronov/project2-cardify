@@ -1,4 +1,5 @@
 import yup from 'yup'
+import moment from 'moment'
 import prisma from '../../../_helpers/prisma.js'
 import handleErrors from '../../../_helpers/handle-errors.js'
 
@@ -28,7 +29,8 @@ const controllersApiMyCollectionsEdit = async (req, res) => {
       },
       data: {
         title: verifiedEditSchema.title || currentSchema.title,
-        description: verifiedEditSchema.description || currentSchema.description
+        description: verifiedEditSchema.description || currentSchema.description,
+        dateUpdated: new Date()
       }
     })
 

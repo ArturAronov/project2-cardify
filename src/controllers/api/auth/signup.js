@@ -1,3 +1,4 @@
+import moment from 'moment'
 import yup from 'yup'
 import bcrypt from 'bcrypt'
 import _ from 'lodash'
@@ -62,7 +63,8 @@ const controllersApiAuthSignup = async (req, res) => {
         name: verifiedData.name,
         email: verifiedData.email,
         avatar: verifiedData.avatar || 'https://lab-restful-api.s3.ap-northeast-2.amazonaws.com/profile.jpeg',
-        passwordHash: await bcrypt.hash(verifiedData.password, 10)
+        passwordHash: await bcrypt.hash(verifiedData.password, 10),
+        dateCreated: new Date()
       }
     })
 

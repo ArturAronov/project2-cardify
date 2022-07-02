@@ -1,3 +1,4 @@
+import moment from 'moment'
 import yup from 'yup'
 import bcrypt from 'bcrypt'
 import _ from 'lodash'
@@ -66,7 +67,8 @@ const controllersApiMyProfileEdit = async (req, res) => {
         name: verifiedEditData.name || dbData.name,
         email: verifiedEditData.email || dbData.email,
         avatar: verifiedEditData.avatar || dbData.avatar,
-        passwordHash: verifiedEditData.password ? await bcrypt.hash(verifiedEditData.password, 10) : dbData.passwordHash
+        passwordHash: verifiedEditData.password ? await bcrypt.hash(verifiedEditData.password, 10) : dbData.passwordHash,
+        dateUpdated: new Date()
       }
     })
 
