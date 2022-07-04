@@ -16,11 +16,6 @@ const flashcardSchema = yup.object({
 const controllersApiMyFlashcardsCreate = async (req, res) => {
   try {
     const paramId = await parseInt(req.params.id)
-    const user = await prisma.collection.findUnique({
-      where: {
-        id: paramId
-      }
-    })
 
     const verifiedData = await flashcardSchema.validate(req.body, {
       abortEarly: false,
@@ -42,11 +37,16 @@ const controllersApiMyFlashcardsCreate = async (req, res) => {
         dateCreated: new Date()
       }
     })
-    const flashcardCount = await prisma.card.findMany()
+
+    const flashcardCount = await prisma.card.findMany({
+      where: {
+        userId: req.session.user.id
+      }
+    })
 
     await prisma.user.update({
       where: {
-        id: user.userId
+        id: req.session.user.id
       },
       data: {
         totalFlashcards: flashcardCount.length

@@ -4,13 +4,20 @@ import handleErrors from '../../../_helpers/handle-errors.js'
 const controllersApiMyCollectionsDelete = async (req, res) => {
   try {
     const paramId = await parseInt(req.params.id)
+
     const deleteCollection = await prisma.collection.delete({
       where: {
         id: paramId
       }
     })
 
-    const currentSchema = await prisma.collection.findMany({
+    const flashcardCount = await prisma.card.count({
+      where: {
+        userId: req.session.user.id
+      }
+    })
+
+    const collectionCount = await prisma.collection.count({
       where: {
         userId: req.session.user.id
       }
@@ -21,7 +28,8 @@ const controllersApiMyCollectionsDelete = async (req, res) => {
         id: req.session.user.id
       },
       data: {
-        totalCollections: currentSchema.length
+        totalFlashcards: flashcardCount,
+        totalCollections: collectionCount
       }
     })
 

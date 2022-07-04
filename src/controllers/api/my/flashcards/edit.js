@@ -34,17 +34,15 @@ const controllersApiMyFlashcardsEdit = async (req, res) => {
       }
     })
 
-    const user = await prisma.card.findUnique({
+    const flashcardCount = await prisma.card.findMany({
       where: {
-        id: flashcardId
+        userId: req.session.user.id
       }
     })
 
-    const flashcardCount = await prisma.card.findMany()
-
     await prisma.user.update({
       where: {
-        id: user.userId
+        id: req.session.user.id
       },
       data: {
         totalFlashcards: flashcardCount.length

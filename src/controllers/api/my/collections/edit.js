@@ -33,12 +33,18 @@ const controllersApiMyCollectionsEdit = async (req, res) => {
       }
     })
 
+    const collectionCount = await prisma.collection.findMany({
+      where: {
+        userId: req.session.user.id
+      }
+    })
+
     await prisma.user.update({
       where: {
         id: req.session.user.id
       },
       data: {
-        totalCollections: currentSchema.length
+        totalCollections: collectionCount.length
       }
     })
 

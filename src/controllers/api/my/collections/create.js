@@ -27,7 +27,7 @@ const controllersApiMyCollectionsCreate = async (req, res) => {
       }
     })
 
-    const currentSchema = await prisma.collection.findMany({
+    const currentCollections = await prisma.collection.findMany({
       where: {
         userId: req.session.user.id
       }
@@ -38,7 +38,7 @@ const controllersApiMyCollectionsCreate = async (req, res) => {
         id: req.session.user.id
       },
       data: {
-        totalCollections: currentSchema.length
+        totalCollections: currentCollections.length
       }
     })
     return res.json(newCollection)
