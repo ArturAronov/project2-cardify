@@ -17,7 +17,7 @@ model User {
   avatar           String
   passwordHash     String
   totalCollections Int          @default(0)
-  totalFashcards   Int          @default(0)
+  totalFlashcards  Int          @default(0)
   dateCreated      DateTime?
   dateUpdated      DateTime?
   Card             Card[]
