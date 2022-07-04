@@ -34,6 +34,23 @@ const controllersApiMyFlashcardsEdit = async (req, res) => {
       }
     })
 
+    const user = await prisma.card.findUnique({
+      where: {
+        id: flashcardId
+      }
+    })
+
+    const flashcardCount = await prisma.card.findMany()
+
+    await prisma.user.update({
+      where: {
+        id: user.userId
+      },
+      data: {
+        totalFlashcards: flashcardCount.length
+      }
+    })
+
     return res.status(201).json(editCollection)
   } catch (err) {
     return handleErrors(res, err)
