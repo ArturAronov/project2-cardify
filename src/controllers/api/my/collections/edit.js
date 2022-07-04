@@ -33,6 +33,15 @@ const controllersApiMyCollectionsEdit = async (req, res) => {
       }
     })
 
+    await prisma.user.update({
+      where: {
+        id: req.session.user.id
+      },
+      data: {
+        totalCollections: currentSchema.length
+      }
+    })
+
     return res.status(201).json(editCollection)
   } catch (err) {
     return handleErrors(res, err)

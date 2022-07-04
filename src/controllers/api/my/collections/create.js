@@ -27,8 +27,20 @@ const controllersApiMyCollectionsCreate = async (req, res) => {
       }
     })
 
-    // return res.send(newCollection)
+    const currentSchema = await prisma.collection.findMany({
+      where: {
+        userId: req.session.user.id
+      }
+    })
 
+    await prisma.user.update({
+      where: {
+        id: req.session.user.id
+      },
+      data: {
+        totalCollections: currentSchema.length
+      }
+    })
     return res.json(newCollection)
   } catch (err) {
     return handleErrors(res, err)

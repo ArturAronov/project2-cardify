@@ -10,6 +10,21 @@ const controllersApiMyCollectionsDelete = async (req, res) => {
       }
     })
 
+    const currentSchema = await prisma.collection.findMany({
+      where: {
+        userId: req.session.user.id
+      }
+    })
+
+    await prisma.user.update({
+      where: {
+        id: req.session.user.id
+      },
+      data: {
+        totalCollections: currentSchema.length
+      }
+    })
+
     return res.status(201).json(deleteCollection)
   } catch (err) {
     return handleErrors(res, err)
