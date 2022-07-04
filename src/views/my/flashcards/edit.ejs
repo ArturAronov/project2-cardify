@@ -1,4 +1,117 @@
 <%- contentFor('styles') %>
 <%- contentFor('scripts') %>
+<script>
+  const paramValueCollection = window.location.pathname.split('/').reverse()[3]
+  const paramValueFlashcard = window.location.pathname.split('/').reverse()[1]
+  console.log(paramValueCollection)
+  console.log(paramValueFlashcard)
+  const generateForm = ({ user, errors } = {}) => {
+    return `
+    <div class="container w-75 pt-5">
+      <h3 class="text-center">
+        Edit Flashcard
+      </h3>
+      <form id="edit-flashcard-form">
+        <label
+          for="question-flashcard"
+          class="form-label m-0 pt-3"
+          >
+            Question
+        </label>
+        <input
+          type="text"
+          id="question-flashcard"
+          class="form-control"
+          name="question"
+          aria-describedby="inputGroup-sizing-default"
+        >
+
+          <label
+          for="answer-flashcard"
+          class="form-label m-0 pt-3"
+          >
+            Answer
+        </label>
+        <input
+          type="text"
+          id="answer-flashcard"
+          class="form-control"
+          name="answer"
+          aria-describedby="inputGroup-sizing-default"
+        >
+        <div class="row justify-content-center">
+          <button id="submit" class="btn btn-primary m-2" type="submit" style='width: 150px'>Submit</button>
+          </div>
+      </form>
+      <div class="d-flex row justify-content-center">
+        <button
+          id="delete"
+          class="btn btn-danger m-2"
+          style='width: 150px'
+          data-bs-toggle="modal"
+          data-bs-target="#deleteFlashcardModal">
+            Delete Flashcard
+        </button>
+      </div>
+      <!-- Modal -->
+        <div class="modal fade" id="deleteFlashcardModal" tabindex="-1" aria-labelledby="deleteFlashcardModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteFlashcardModalLabel">🚨 Delete Flashcard 🚨</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                WARNING! By Clicking 'Delete Flashcard', your flashcard will be permanently deleted.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="delete-button" type="button" class="btn btn-danger">Delete Flashcard</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  `
+  }
+
+  const deleteFlashcardBtn = e => {
+    e.preventDefault()
+
+    axios({
+      method: 'DELETE',
+      url: `/api/collections/${paramValueCollection}/flashcards/${paramValueFlashcard}`,
+    }).then(() => {
+      window.location = `/my/collections/${paramValueCollection}/flashcards`
+    })
+  }
+
+  const submitEdit = e => {
+    e.preventDefault();
+    const data = new FormData(e.target)
+
+    axios({
+      method: 'PUT',
+      url: `/api/collections/${paramValueCollection}/flashcards/${paramValueFlashcard}`,
+      data
+    }).then(() => {
+      window.location = `/my/collections/${paramValueCollection}/flashcards`
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  const generatePage = info => {
+    const $page = $('#pages-flashcard-edit')
+    const $editCollections = generateForm(info)
+    $page.html('').append($editCollections)
+  }
+
+  $(document).ready(async () => {
+    await generatePage()
+    await $('#pages-flashcard-edit').on('submit', '#edit-flashcard-form', submitEdit)
+    await $('#pages-flashcard-edit').on('click', '#delete-button', deleteFlashcardBtn)
+  })
+</script>
 <%- contentFor('body') %>
-<div id="pages-auth-login" class="container">Edit Flashcard</div>
+  <div id="pages-flashcard-edit" class="container"></div>
