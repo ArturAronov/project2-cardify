@@ -17,7 +17,7 @@
             right,
             wrong,
             dateCreated,
-            dateEdited
+            dateUpdated
           } = element
 
           return `
@@ -54,7 +54,7 @@
                           Date created: ${moment(dateCreated).format("Do MMMM YYYY, dddd, hh:mm A")}
                         </div>
                         <div>
-                          Date edited: ${dateEdited === dateEdited ? ' - ' : moment(dateEdited).format("Do MMMM YYYY, dddd, hh:mm A")}
+                          Date edited: ${dateUpdated === null ? ' - ' : moment(dateUpdated).format("Do MMMM YYYY, dddd, hh:mm A")}
                         </div>
                       </td>
                       <td>
