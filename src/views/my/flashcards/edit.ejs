@@ -3,8 +3,7 @@
 <script>
   const paramValueCollection = window.location.pathname.split('/').reverse()[3]
   const paramValueFlashcard = window.location.pathname.split('/').reverse()[1]
-  console.log(paramValueCollection)
-  console.log(paramValueFlashcard)
+
   const generateForm = ({ user, errors } = {}) => {
     return `
     <div class="container w-75 pt-5">
