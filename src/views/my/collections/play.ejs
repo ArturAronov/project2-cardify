@@ -1,4 +1,103 @@
 <%- contentFor('styles') %>
 <%- contentFor('scripts') %>
+<script>
+  const paramValue = window.location.href.split('/').reverse()[1]
+  let cards = [];
+  let iterator = 0;
+
+  const sattoloShuffle = arr => {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * i)
+      const temp = arr[i]
+
+      arr[i] = arr[j]
+      arr[j] = temp
+    }
+    cards = arr
+    return arr
+  }
+
+  const generatePlayPage = (test) => {
+    console.log(test.answer)
+    return `
+      <div id="test">
+        <div class="d-flex justify-content-center mt-5">
+          <div id='card-border' class="card border-dark" style="width: 400px">
+            <div class="card-header text-center">Header</div>
+            <div class="card-body text-dark pb-3">
+              <h5 class="card-title text-center">${test.question}</h5>
+              <div id="answer-status"></div>
+            </div>
+            <form class="mx-3" id="play-flashcard-form">
+              <input id="input-answer" placeholder="answer input" name="answer" type="text" class="form-control">
+              <div class="d-flex justify-content-between my-3">
+                <button id='skip-answer-button' type="button" class="btn btn-outline-primary" style="width: 88px">Skip</button>
+                <button id='submit-answer-button' class="btn btn-primary" type="submit" style="width: 88px">Submit</button>
+              </div>
+            </form>
+          <div>
+        </div>
+      </div>
+    `
+  }
+
+  const generatePage = info => {
+    const $page = $('#pages-collections-play')
+    const $play = generatePlayPage(info)
+    $page.html('').append($play)
+  }
+
+
+  const getFlashcards = () => {
+    axios({
+      method: 'GET',
+      url: `/api/collections/${paramValue}/flashcards`
+    }).then(res => {
+      sattoloShuffle(res.data)
+      generatePage(cards[iterator])
+    })
+  }
+
+  const generateNewFlashcard = () => {
+    iterator++
+
+    if (iterator + 1 > cards.length) {
+      iterator = 0;
+      sattoloShuffle(cards)
+      generatePage(cards[iterator])
+    } else {
+      generatePage(cards[iterator])
+    }
+  }
+
+  const submitEdit = e => {
+    e.preventDefault()
+    const userInput = $('#input-answer').val().trim().toLowerCase()
+    const answer = cards[iterator].answer.toLowerCase()
+
+    if(userInput === answer) {
+      $('#card-border').attr('class', 'card border-success')
+      $('#answer-status').text("Correct!").attr('class', 'text-center fw-lighter lh-1 text-success')
+      $('#skip-answer-button').attr('class', 'btn btn-outline-primary disabled')
+      $('#submit-answer-button').attr('class', 'btn btn-success disabled')
+      setTimeout(() => {
+        generateNewFlashcard()
+      }, 1000);
+    } else {
+      $('#card-border').attr('class', 'card border-danger')
+      $('#answer-status').text("Wrong Answer!").attr('class', 'text-center fw-lighter lh-1 text-danger')
+      $('#skip-answer-button').attr('class', 'btn btn-outline-primary disabled')
+      $('#submit-answer-button').attr('class', 'btn btn-danger disabled')
+      setTimeout(() => {
+        generateNewFlashcard()
+      }, 1000);
+    }
+  }
+
+  $(document).ready(async () => {
+    await getFlashcards()
+    await $('#pages-collections-play').on('submit', '#play-flashcard-form', submitEdit)
+  })
+</script>
 <%- contentFor('body') %>
-<div id="pages-auth-login" class="container">Play</div>
+<div id="pages-collections-play" class="container"></div>
