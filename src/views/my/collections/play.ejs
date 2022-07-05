@@ -2,8 +2,9 @@
 <%- contentFor('scripts') %>
 <script>
   const paramValue = window.location.href.split('/').reverse()[1]
-  let cards = [];
-  let iterator = 0;
+  let cards = []
+  let collection
+  let iterator = 0
 
   const sattoloShuffle = arr => {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -23,7 +24,7 @@
       <div id="test">
         <div class="d-flex justify-content-center mt-5">
           <div id='card-border' class="card border-dark" style="width: 400px">
-            <div class="card-header text-center">Header</div>
+            <div class="card-header text-center">${collection}</div>
             <div class="card-body text-dark pb-3">
               <h5 class="card-title text-center">${test.question}</h5>
               <div id="answer-status"></div>
@@ -47,6 +48,15 @@
     $page.html('').append($play)
   }
 
+  const getCollectionName = () => {
+    axios({
+      method: 'GET',
+      url: '/api/my/collections'
+    }).then(res => {
+      const findCollection = res.data.filter(element=>element.id === parseInt(paramValue))
+      collection = findCollection[0].title
+    })
+  }
 
   const getFlashcards = () => {
     axios({
@@ -57,6 +67,7 @@
       generatePage(cards[iterator])
     })
   }
+
 
   const generateNewFlashcard = () => {
     iterator++
@@ -94,9 +105,10 @@
     }
   }
 
-  $(document).ready(async () => {
-    await getFlashcards()
-    await $('#pages-collections-play').on('submit', '#play-flashcard-form', submitEdit)
+  $(document).ready(() => {
+    getCollectionName()
+    getFlashcards()
+    $('#pages-collections-play').on('submit', '#play-flashcard-form', submitEdit)
   })
 </script>
 <%- contentFor('body') %>
