@@ -1,13 +1,25 @@
 <%- contentFor('styles') %>
 <%- contentFor('scripts') %>
 <script>
+  // Current collections's id from the url param
   const paramValue = window.location.href.split('/').reverse()[1]
+
+  // Flashcards retrieved from the getFlashcards, and reshuffled in sattoloShuffle
   let cards = []
+
+  // Collection title retrieved from getCollectionName
   let collectionTitle
+
+  // Flashcard id retrieved from generatePlayPage and passed into postToApi
   let flashcardId
+
+  // Correct answer from the flashcard retrieved from generatePlayPage and passed into handleSubmit
   let correctAnswer
+
+  // Iterator that get incremented in generateNewFlashcard that gets used to display flashcard from the array
   let iterator = 0
 
+  // A take on Fisher Yates algorithm that takes and array and reshuffles it
   const sattoloShuffle = arr => {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * i)
@@ -21,8 +33,14 @@
   }
 
   const generatePlayPage = flashcard => {
-    flashcardId = flashcard.id
-    correctAnswer = flashcard.answer
+    const {
+      id,
+      answer,
+      question
+    } = flashcard
+
+    flashcardId = id
+    correctAnswer = answer
     console.log(correctAnswer)
 
     return `
@@ -31,7 +49,7 @@
           <div id='card-border' class="card border-secondary" style="width: 400px">
             <div class="card-header text-center style="font-size: 13px">${collectionTitle}</div>
             <div class="card-body text-dark">
-              <h5 class="card-title pb-5 text-center">${flashcard.question}</h5>
+              <h5 class="card-title pb-5 text-center">${question}</h5>
               <div id="answer-status" ></div>
               <div id="correct-answer"></div>
             </div>
@@ -48,35 +66,43 @@
     `
   }
 
+  // Appends the play #play element into the main page
   const generatePage = info => {
     const $page = $('#pages-collections-play')
     const $play = generatePlayPage(info)
     $page.html('').append($play)
   }
 
+  // Retrieves the collection name, that is used in the card header, from the collection database
   const getCollectionName = () => {
     axios({
       method: 'GET',
       url: '/api/my/collections'
     }).then(res => {
+      // Filters out collection thats id matches the pages param value
       const findCollection = res.data.filter(element=>element.id === parseInt(paramValue))
+
+      // Retrieves only the collection title from the entire array
       collectionTitle = findCollection[0].title
     })
   }
 
-
+  // Retrieves the flashcards from the collection database
   const getFlashcards = () => {
     axios({
       method: 'GET',
       url: `/api/collections/${paramValue}/flashcards`
     }).then(res => {
+      // Shuffles the retrieved array
       sattoloShuffle(res.data)
+
+      // Generates the page and passes the newly shuffled array from the iterator index
       generatePage(cards[iterator])
     })
   }
 
-
-  const postToApi = (card, state) => {
+  // Increment the wrong or right values in the database on every submit
+  const incrementRightWrong = (card, state) => {
     const data={
       value: state
     }
@@ -87,10 +113,12 @@
     })
   }
 
+  // Function that generates new flashcard. This function gets used in the handleSubmit function
   const generateNewFlashcard = () => {
     iterator++
 
     if (iterator + 1 > cards.length) {
+      // Should the iterator reach the value of the cards array length, set it back to zero and reshuffle the cards again
       iterator = 0;
       sattoloShuffle(cards)
       generatePage(cards[iterator])
@@ -99,27 +127,39 @@
     }
   }
 
+  // Logic that handles styling on every submit, given whether the answer is correct or not. Here also the data gets sent to API from the incrementRightWrong function
   const handleSubmit = state => {
-    postToApi(flashcardId, state ? 'right' : 'wrong')
+    incrementRightWrong(flashcardId, state ? 'right' : 'wrong')
 
     const $correctAnswer = $('#correct-answer')
     const currentState = state ? 'success' : 'danger'
 
     !state && $correctAnswer.text(`Correct answer is ${correctAnswer}`).attr('class', 'text-center')
 
+    // Clears off pb-5 from h5 to make some space for the text messages that indicate whether the answer was right or wrong
     $('h5').attr('class', 'card-title text-center')
+
+    // Changes border style depending on the answer sumbitted
     $('#card-border').attr('class', `card border-${currentState}`)
+
+    // Handles the feedback text and spacing
     $('#answer-status').text(state ? "Correct" : "Wrong Answer!").attr('class', `text-center ${state ? 'm-3' : 'm-0'} text-${currentState}`).css("font-size", "15px")
+
+    // Handles the button styles
     $('#skip-answer-button').attr('class', 'btn btn-outline-primary disabled')
     $('#submit-answer-button').attr('class', `btn btn-${currentState} disabled`)
 
+    // Generates new flashcard after 1 second delay
     setTimeout(() => {
       generateNewFlashcard()
     }, 1000)
   }
 
+  // Compares the input value with the one retrieved from the array
   const submitAnswer = e => {
     e.preventDefault()
+
+    // converts everything to lowercase and removes the trailing whitespace
     const userInput = $('#input-answer').val().trim().toLowerCase()
     const answer = cards[iterator].answer.toLowerCase()
 
@@ -130,6 +170,7 @@
     }
   }
 
+  // Handles the Skip button behavior
   const submitSkip = () => {
     return generateNewFlashcard()
   }
