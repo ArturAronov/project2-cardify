@@ -23,16 +23,16 @@
     return `
       <div id="test">
         <div class="d-flex justify-content-center mt-5">
-          <div id='card-border' class="card border-dark" style="width: 400px">
-            <div class="card-header text-center">${collection}</div>
+          <div id='card-border' class="card border-secondary" style="width: 400px">
+            <div class="card-header text-center p-2" style="font-size: 13px">${collection}</div>
             <div class="card-body text-dark pb-3">
               <h5 class="card-title text-center">${test.question}</h5>
-              <div id="answer-status"></div>
+              <div id="answer-status" class='p-4'></div>
             </div>
             <form class="mx-3" id="play-flashcard-form">
               <input id="input-answer" placeholder="answer input" name="answer" type="text" class="form-control">
-              <div class="d-flex justify-content-between my-3">
-                <button id='skip-answer-button' type="button" class="btn btn-outline-primary" style="width: 88px">Skip</button>
+              <div class="d-flex justify-content-between my-3" id="submit-form">
+                <button id="skip-answer-button" type="button" class="btn btn-outline-primary" style="width: 88px">Skip</button>
                 <button id='submit-answer-button' class="btn btn-primary" type="submit" style="width: 88px">Submit</button>
               </div>
             </form>
@@ -81,34 +81,39 @@
     }
   }
 
-  const submitEdit = e => {
+  const handleSubmit = state => {
+    const currentState = state ? 'success' : 'danger'
+    $('#card-border').attr('class', `card border-${currentState}`)
+    $('#answer-status').text(state ? "Correct" : "Wrong Answer!").attr('class', `text-center p-3 text-${currentState}`).css("font-size", "15px")
+    $('#skip-answer-button').attr('class', 'btn btn-outline-primary disabled')
+    $('#submit-answer-button').attr('class', `btn btn-${currentState} disabled`)
+    setTimeout(() => {
+      generateNewFlashcard()
+    }, 1000)
+  }
+
+  const submitAnswer = e => {
     e.preventDefault()
     const userInput = $('#input-answer').val().trim().toLowerCase()
     const answer = cards[iterator].answer.toLowerCase()
 
     if(userInput === answer) {
-      $('#card-border').attr('class', 'card border-success')
-      $('#answer-status').text("Correct!").attr('class', 'text-center fw-lighter lh-1 text-success')
-      $('#skip-answer-button').attr('class', 'btn btn-outline-primary disabled')
-      $('#submit-answer-button').attr('class', 'btn btn-success disabled')
-      setTimeout(() => {
-        generateNewFlashcard()
-      }, 1000);
+      handleSubmit(true)
     } else {
-      $('#card-border').attr('class', 'card border-danger')
-      $('#answer-status').text("Wrong Answer!").attr('class', 'text-center fw-lighter lh-1 text-danger')
-      $('#skip-answer-button').attr('class', 'btn btn-outline-primary disabled')
-      $('#submit-answer-button').attr('class', 'btn btn-danger disabled')
-      setTimeout(() => {
-        generateNewFlashcard()
-      }, 1000);
+      handleSubmit(false)
     }
+  }
+
+  const submitSkip = () => {
+    return generateNewFlashcard()
   }
 
   $(document).ready(() => {
     getCollectionName()
     getFlashcards()
-    $('#pages-collections-play').on('submit', '#play-flashcard-form', submitEdit)
+    $('#pages-collections-play').on('click', '#submit-answer-button', submitAnswer)
+    $('#pages-collections-play').on('click', '#skip-answer-button', submitSkip)
+
   })
 </script>
 <%- contentFor('body') %>
