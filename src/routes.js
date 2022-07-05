@@ -14,6 +14,9 @@ router.get('/api/my/collections', authenticateUser('json'), (await import('./con
 router.put('/api/my/collections/:id', authenticateUser('json'), (await import('./controllers/api/my/collections/edit.js')).default)
 router.delete('/api/my/collections/:id', authenticateUser('json'), (await import('./controllers/api/my/collections/delete.js')).default)
 
+// API || COLLECTIONS || PLAY || AUTH REQUIRED
+router.post('/api/my/play/:id', authenticateUser('json'), (await import('./controllers/api/my/collections/play.js')).default)
+
 // API | FLASHCARDS | AUTH REQUIRED
 router.post('/api/collections/:id/flashcards', authenticateUser('json'), (await import('./controllers/api/my/flashcards/create.js')).default)
 router.get('/api/collections/:id/flashcards', authenticateUser('json'), (await import('./controllers/api/my/flashcards/show.js')).default)
