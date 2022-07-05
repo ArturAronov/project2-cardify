@@ -3,7 +3,9 @@
 <script>
   const paramValue = window.location.href.split('/').reverse()[1]
   let cards = []
-  let collection
+  let collectionTitle
+  let flashcardId
+  let correctAnswer
   let iterator = 0
 
   const sattoloShuffle = arr => {
@@ -18,19 +20,23 @@
     return arr
   }
 
-  const generatePlayPage = (test) => {
-    console.log(test.answer)
+  const generatePlayPage = flashcard => {
+    flashcardId = flashcard.id
+    correctAnswer = flashcard.answer
+    console.log(correctAnswer)
+
     return `
-      <div id="test">
+      <div id="flashcard">
         <div class="d-flex justify-content-center mt-5">
           <div id='card-border' class="card border-secondary" style="width: 400px">
-            <div class="card-header text-center p-2" style="font-size: 13px">${collection}</div>
-            <div class="card-body text-dark pb-3">
-              <h5 class="card-title text-center">${test.question}</h5>
-              <div id="answer-status" class='p-4'></div>
+            <div class="card-header text-center style="font-size: 13px">${collectionTitle}</div>
+            <div class="card-body text-dark">
+              <h5 class="card-title pb-5 text-center">${flashcard.question}</h5>
+              <div id="answer-status" ></div>
+              <div id="correct-answer"></div>
             </div>
-            <form class="mx-3" id="play-flashcard-form">
-              <input id="input-answer" placeholder="answer input" name="answer" type="text" class="form-control">
+            <form class="px-3" id="play-flashcard-form">
+              <input id="input-answer" placeholder="answer input" name="answer" type="text" class="form-control" autocomplete="off">
               <div class="d-flex justify-content-between my-3" id="submit-form">
                 <button id="skip-answer-button" type="button" class="btn btn-outline-primary" style="width: 88px">Skip</button>
                 <button id='submit-answer-button' class="btn btn-primary" type="submit" style="width: 88px">Submit</button>
@@ -54,9 +60,10 @@
       url: '/api/my/collections'
     }).then(res => {
       const findCollection = res.data.filter(element=>element.id === parseInt(paramValue))
-      collection = findCollection[0].title
+      collectionTitle = findCollection[0].title
     })
   }
+
 
   const getFlashcards = () => {
     axios({
@@ -68,6 +75,17 @@
     })
   }
 
+
+  const postToApi = (card, state) => {
+    const data={
+      value: state
+    }
+    axios({
+      method: 'POST',
+      url: `/api/my/play/${card}`,
+      data
+    })
+  }
 
   const generateNewFlashcard = () => {
     iterator++
@@ -82,11 +100,19 @@
   }
 
   const handleSubmit = state => {
+    postToApi(flashcardId, state ? 'right' : 'wrong')
+
+    const $correctAnswer = $('#correct-answer')
     const currentState = state ? 'success' : 'danger'
+
+    !state && $correctAnswer.text(`Correct answer is ${correctAnswer}`).attr('class', 'text-center')
+
+    $('h5').attr('class', 'card-title text-center')
     $('#card-border').attr('class', `card border-${currentState}`)
-    $('#answer-status').text(state ? "Correct" : "Wrong Answer!").attr('class', `text-center p-3 text-${currentState}`).css("font-size", "15px")
+    $('#answer-status').text(state ? "Correct" : "Wrong Answer!").attr('class', `text-center ${state ? 'm-3' : 'm-0'} text-${currentState}`).css("font-size", "15px")
     $('#skip-answer-button').attr('class', 'btn btn-outline-primary disabled')
     $('#submit-answer-button').attr('class', `btn btn-${currentState} disabled`)
+
     setTimeout(() => {
       generateNewFlashcard()
     }, 1000)
