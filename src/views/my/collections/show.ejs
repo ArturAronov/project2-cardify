@@ -1,21 +1,74 @@
 <%- contentFor('styles') %>
 <%- contentFor('scripts') %>
 <script>
+  let arr;
+
+  const generateTitle = () => {
+    return `
+      <h3 class="text-center pt-5">Collections</h3>
+    `
+  }
+
+  const generateFilter = (query = {}) => {
+    return `
+      <div id="select-container" class="mt-5 d-flex justify-content-center">
+        <select id="collection-sort-select" class="form-select" style="width: 250px">
+          <option
+            ${query === "sort-date-asc" && "selected"}
+            value="sort-date-asc">
+              Date created: ascending
+          </option>
+          <option
+            ${query === "sort-date-desc" && "selected"}
+            value="sort-date-desc">
+              Date created: descending
+          </option>
+          <option
+          id="sort-cards-most"
+            ${query === "sort-cards-most" && "selected"}
+            value="sort-cards-most">
+              Most Flashcards
+          </option>
+          <option
+            ${query === "sort-cards-least" && "selected"}
+            value="sort-cards-least">
+              Least Flashcards
+          </option>
+        </select>
+      </div>
+    `
+  }
+
   const generateCollections = (collection = {}) => {
     return `
       <div>
-        <h3 class="text-center pt-5">Collections</h3>
-        <div class="mt-5 d-flex flex-wrap justify-content-center">
+        <div class="mt-3 d-flex flex-wrap justify-content-center">
           ${collection.map(element => {
+            const {
+              id,
+              title,
+              description,
+              dateCreated,
+              dateUpdated,
+            } = element
+
             return `
-              <div class="card text-center m-2 shadow-sm" style="min-width: 250px; user-select: none">
+              <div class="card text-center m-2 shadow-sm  d-flex justify-content-between" style="min-width: 250px; user-select: none">
                 <div class="card-body">
-                  <h5 class="card-title">${element.title}</h5>
-                  <p class="card-text">${element.description || ''}</p>
+                    <h5 class="card-title">${title}</h5>
+                    <p class="card-text">${description || ''}</p>
+
+                </div>
+                <div class="mb-2">
+                  <div class="mx-3">
+                    <p class="text-start text-sm">Total Flashcards: ${element["_count"].Card}</p>
+                    <p class="text-start text-sm">Date Created: ${moment(dateCreated).format("D MMMM YY")}</p>
+                    <p class="text-start text-sm">Date Updated: ${dateUpdated === null ? ' - ' : moment(dateUpdated).format("D MMMM YY")}</p>
+                  </div>
                   <div>
-                    <a href="/my/collection/${element.id}/play" class="card-link">Play</a>
-                    <a href="/my/collections/${element.id}/flashcards" class="card-link">Flashcards</a>
-                    <a href="/my/collections/${element.id}/edit" class="card-link">Edit</a>
+                    <a href="/my/collection/${id}/play" class="card-link">Play</a>
+                    <a href="/my/collections/${id}/flashcards" class="card-link">Flashcards</a>
+                    <a href="/my/collections/${id}/edit" class="card-link">Edit</a>
                   </div>
                 </div>
               </div>
@@ -30,25 +83,50 @@
   }
 
 
-  const getCollectionData = () => {
+  const getCollectionData = e => {
     axios({
       method: 'GET',
       url: '/api/my/collections'
     }).then(res => {
+      arr = res.data
       generatePage(res.data)
     }).catch(err => {
       console.log(err)
     })
   }
 
-  const generatePage = info => {
+  const generatePage = (data, query) => {
     const $page = $('#pages-collection-show')
-    const $collection = generateCollections(info)
-    $page.html('').append($collection)
+    const $selectContainer = $('#select-container')
+    const $collection = generateCollections(data)
+    const $select = generateFilter(query)
+    const $title = generateTitle()
+    $page.html('').append($title).append($select).append($collection)
+  }
+
+  const sortCollections = e => {
+    e.preventDefault()
+    const selected = e.target.value
+    console.log(arr)
+    if (selected === 'sort-date-asc'){
+      arr.sort((a, b) => a.id - b.id)
+      generatePage(arr, selected)
+    } else if (selected === 'sort-date-desc') {
+      arr.sort((a, b) => b.id - a.id)
+      generatePage(arr, selected)
+    } else if (selected === 'sort-cards-most') {
+      arr.sort((a, b) => b['_count'].Card - a['_count'].Card)
+      generatePage(arr, selected)
+    } else if (selected ==='sort-cards-least') {
+      arr.sort((a, b) => a['_count'].Card - b['_count'].Card)
+      generatePage(arr, selected)
+    }
+
   }
 
   $(document).ready(() => {
     getCollectionData()
+    $('#pages-collection-show').on('change', '#collection-sort-select', sortCollections)
   })
 </script>
 <%- contentFor('body') %>

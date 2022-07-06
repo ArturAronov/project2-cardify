@@ -2,9 +2,16 @@ import prisma from '../../../_helpers/prisma.js'
 
 const controllersApiMyCollectionsShow = async (req, res) => {
   try {
-    const foundCollection = await prisma.collection.findMany({
+    const getCollection = await prisma.collection.findMany({
       where: {
         userId: req.session.user.id
+      },
+      include: {
+        _count: {
+          select: {
+            Card: true
+          }
+        }
       },
       orderBy: {
         id: 'asc'
@@ -12,7 +19,7 @@ const controllersApiMyCollectionsShow = async (req, res) => {
       rejectOnNotFound: true
     })
 
-    return res.status(201).json(foundCollection)
+    return res.status(201).json(getCollection)
   } catch (error) {
     return res.send(error.message)
   }
