@@ -70,7 +70,7 @@
   const generatePage = info => {
     const $page = $('#pages-collections-play')
     const $play = generatePlayPage(info)
-    $page.html('').append($play)
+    $page.html('').append($play).hide().fadeIn('slow')
   }
 
   // Retrieves the collection name, that is used in the card header, from the collection database
