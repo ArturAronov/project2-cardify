@@ -2,11 +2,48 @@
 <%- contentFor('scripts') %>
   <script>
     const paramValue = window.location.pathname.split('/').reverse()[1]
+    let arr
+
+    const generateTitle = () => {
+      return `
+       <h3 class="text-center pt-5">Flashcards</h3>
+      `
+    }
+
+    const generateFilter = (query = {}) => {
+      return `
+        <div id="select-container" class="my-4 d-flex justify-content-center">
+          <select id="flashcards-sort-select" class="form-select" style="width: 250px">
+            <option
+              ${query === "sort-date-asc" && "selected"}
+              value="sort-date-asc">
+                Date created: ascending
+            </option>
+            <option
+              ${query === "sort-date-desc" && "selected"}
+              value="sort-date-desc">
+                Date created: descending
+            </option>
+            <option
+            id="sort-most-rith"
+              ${query === "sort-most-right" && "selected"}
+              value="sort-most-right">
+                Most Right Answers
+            </option>
+            <option
+              ${query === "sort-most-wrong" && "selected"}
+              value="sort-most-wrong">
+                Most Wrong Answers
+            </option>
+          </select>
+        </div>
+      `
+    }
 
     const generateFlashcards = (flashcards = {}) => {
       return `
     <div class="container d-flex justify-content-center row">
-      <h3 class="text-center pt-5">Flashcards</h3>
+
 
       <div class="accordion w-75" id="accordionPanelsStayOpenExample">
         ${flashcards.map(element => {
@@ -82,20 +119,41 @@
         method: 'GET',
         url: `/api/collections/${paramValue}/flashcards`
       }).then(res => {
+        arr = res.data
         generatePage(res.data)
-      }).catch(err => {
-        console.log(err)
       })
     }
 
-    const generatePage = info => {
+    const generatePage = (data, query) => {
       const $page = $('#pages-flashcards-show')
-      const $flashcards = generateFlashcards(info)
-      $page.html('').append($flashcards)
+      const $flashcards = generateFlashcards(data)
+      const $select = generateFilter(query)
+      const $title = generateTitle()
+      $page.html('').append($title).append($select).append($flashcards)
+    }
+
+    const sortFlashcards = e => {
+      e.preventDefault()
+      const selected = e.target.value
+
+      if (selected === 'sort-date-asc') {
+        arr.sort((a, b) => a.id - b.id)
+        generatePage(arr, selected)
+      } else if (selected === 'sort-date-desc') {
+        arr.sort((a, b) => b.id - a.id)
+        generatePage(arr, selected)
+      } else if (selected === 'sort-most-right') {
+        arr.sort((a, b) => b.right - a.right)
+        generatePage(arr, selected)
+      } else if (selected === 'sort-most-wrong') {
+        arr.sort((a, b) => b.wrong - a.wrong)
+        generatePage(arr, selected)
+      }
     }
 
     $(document).ready(() => {
       getFlashcardsData()
+      $('#pages-flashcards-show').on('change', '#flashcards-sort-select', sortFlashcards)
     })
   </script>
 <%- contentFor('body') %>
