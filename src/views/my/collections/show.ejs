@@ -90,8 +90,6 @@
     }).then(res => {
       arr = res.data
       generatePage(res.data)
-    }).catch(err => {
-      console.log(err)
     })
   }
 
@@ -107,7 +105,7 @@
   const sortCollections = e => {
     e.preventDefault()
     const selected = e.target.value
-    console.log(arr)
+
     if (selected === 'sort-date-asc'){
       arr.sort((a, b) => a.id - b.id)
       generatePage(arr, selected)
