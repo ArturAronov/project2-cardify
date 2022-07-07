@@ -31,6 +31,7 @@ Demo Password: 111111
 
 ### Prisma Schema
 - User    
+
 |Field            |Type         |Attribute                    |
 |-----------------|-------------|-----------------------------|
 |id               |Int          |@id @default(autoincrement())|
