@@ -79,26 +79,26 @@ Demo Password: 111111
 
 
 ### API
-|Method   |URL                                                    |Corresponding File                           |AUTH?    |
-|---------|-------------------------------------------------------|---------------------------------------------|---------|
-|POST     |/api/auth/signup                                       |src/controllers/api/auth/signup.js           |FALSE    |
-|POST     |/api/auth/login                                        |src/controllers/api/auth/login.js            |FALSE    |
-|DELETE   |/api/auth/logout                                       |src/controllers/api/auth/logout.js           |FALSE    |
-|         |                                                       |                                             |         |
-|GET      |/api/my/profile                                        |src/controllers/api/my/profile/show.js       |TRUE     |
-|PUT      |/api/my/profile/update                                 |src/controllers/api/my/profile/update.js     |TRUE     |
-|         |                                                       |                                             |         |
-|POST     |/api/my/collections                                    |src/controllers/api/my/collections/create.js |TRUE     |
-|GET      |/api/my/collections                                    |src/controllers/api/my/collections/show.js   |TRUE     |
-|PUT      |/api/my/collections/:id                                |src/controllers/api/my/collections/update.js |TRUE     |
-|DELETE   |/api/my/collections/:id                                |src/controllers/api/my/collections/delete.js |TRUE     |
-|         |                                                       |                                             |         |
-|POST     |/api/my/play/:id                                       |src/controllers/api/my/collections/play.js   |TRUE     |
-|         |                                                       |                                             |         |
-|POST     |/api/my/collections/:id/flashcards                     |src/controllers/api/my/flashcards/create.js  |TRUE     |
-|GET      |/api/my/collections/:id/flashcards                     |src/controllers/api/my/flashcards/show.js    |TRUE     |
-|PUT      |/api/collections/:collectionId/flashcards/:flashcardId |src/controllers/api/my/flashcards/update.js  |TRUE     |
-|DELETE   |/api/collections/:collectionId/flashcards/:flashcardId |src/controllers/api/my/flashcards/delete.js  |TRUE     |
+|Method   |URL                                                    |Corresponding File                           |AUTH?    |Expected Error       |
+|---------|-------------------------------------------------------|---------------------------------------------|---------|---------------------|
+|POST     |/api/auth/signup                                       |src/controllers/api/auth/signup.js           |FALSE    |406                  |
+|POST     |/api/auth/login                                        |src/controllers/api/auth/login.js            |FALSE    |406                  |
+|DELETE   |/api/auth/logout                                       |src/controllers/api/auth/logout.js           |FALSE    |none                 |
+|         |                                                       |                                             |         |                     |
+|GET      |/api/my/profile                                        |src/controllers/api/my/profile/show.js       |TRUE     |401                  |
+|PUT      |/api/my/profile/update                                 |src/controllers/api/my/profile/update.js     |TRUE     |401<br/>406          |
+|         |                                                       |                                             |         |                     |
+|POST     |/api/my/collections                                    |src/controllers/api/my/collections/create.js |TRUE     |401<br/>406          |
+|GET      |/api/my/collections                                    |src/controllers/api/my/collections/show.js   |TRUE     |401                  |
+|PUT      |/api/my/collections/:id                                |src/controllers/api/my/collections/update.js |TRUE     |401<br/>404<br/>406  |
+|DELETE   |/api/my/collections/:id                                |src/controllers/api/my/collections/delete.js |TRUE     |401<br/>404          |
+|         |                                                       |                                             |         |                     |
+|POST     |/api/my/play/:id                                       |src/controllers/api/my/collections/play.js   |TRUE     |401<br/>404<br/>406  |
+|         |                                                       |                                             |         |                     |
+|POST     |/api/my/collections/:id/flashcards                     |src/controllers/api/my/flashcards/create.js  |TRUE     |406                  |
+|GET      |/api/my/collections/:id/flashcards                     |src/controllers/api/my/flashcards/show.js    |TRUE     |401                  |
+|PUT      |/api/collections/:collectionId/flashcards/:flashcardId |src/controllers/api/my/flashcards/update.js  |TRUE     |401<br/>404<br/>406  |
+|DELETE   |/api/collections/:collectionId/flashcards/:flashcardId |src/controllers/api/my/flashcards/delete.js  |TRUE     |401<br/>404          |
 
 
 
