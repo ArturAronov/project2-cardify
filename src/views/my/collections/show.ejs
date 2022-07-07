@@ -10,7 +10,7 @@
   }
 
   const generateFilter = (query = {}) => {
-    return `
+    return arr.length > 1 ?  `
       <div id="select-container" class="mt-5 d-flex justify-content-center">
         <select id="collection-sort-select" class="form-select" style="width: 250px">
           <option
@@ -36,7 +36,7 @@
           </option>
         </select>
       </div>
-    `
+    ` : ''
   }
 
   const generateCollections = (collection = {}) => {
@@ -53,7 +53,7 @@
             } = element
 
             return `
-              <div class="card text-center m-2 shadow-sm  d-flex justify-content-between" style="min-width: 250px; user-select: none">
+              <div class="card text-center m-2 shadow-sm  d-flex justify-content-between" style="width: 250px; user-select: none">
                 <div class="card-body">
                     <h5 class="card-title">${title}</h5>
                     <p class="card-text">${description || ''}</p>

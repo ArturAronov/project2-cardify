@@ -11,7 +11,7 @@
     }
 
     const generateFilter = (query = {}) => {
-      return `
+      return arr.length > 1 ? `
         <div id="select-container" class="my-4 d-flex justify-content-center">
           <select id="flashcards-sort-select" class="form-select" style="width: 250px">
             <option
@@ -37,7 +37,7 @@
             </option>
           </select>
         </div>
-      `
+      ` : '<div></div>'
     }
 
     const generateFlashcards = (flashcards = {}) => {
