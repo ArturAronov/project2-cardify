@@ -2,24 +2,48 @@
 <%- contentFor('scripts') %>
 <script>
 const generateProfile = ({user} = {}) => {
+  const {
+    name,
+    avatar,
+    email,
+    totalCollections,
+    totalFlashcards
+  } = user
+
   return `
     <div class="container d-flex justify-content-center row">
-      <h3 class="text-center pt-5">${user.name}</h3>
+      <h3 class="text-center pt-5">${name}</h3>
       <div class="w-75">
-        <img src=${user.avatar}/>
-        <table class="table-responsive table-borderless w-100">
+        <div class="d-flex justify-content-center m-2">
+        <div
+          style="
+            background: url(${avatar}) 50% 50% no-repeat;
+            border-radius: 50%;
+            background-size: cover;
+            width: 200px;
+            height: 200px;
+          ">
+          </div>
+        </div>
+        <table class="table-responsive table-borderless d-flex justify-content-center">
           <tbody>
             <tr>
               <td>Email: </td>
-              <td>${user.email}</td>
+              <td> </td>
+              <td> </td>
+              <td>${email}</td>
             </tr>
             <tr>
               <td>Total Collections: </td>
-              <td>${user.totalCollections}</td>
+              <td> </td>
+              <td> </td>
+              <td>${totalCollections}</td>
             </tr>
             <tr>
               <td>Total Flashcards: </td>
-              <td>${user.totalFlashcards}</td>
+              <td> </td>
+              <td> </td>
+              <td>${totalFlashcards}</td>
             </tr>
           </tbody>
         </table>
