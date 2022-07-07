@@ -45,8 +45,6 @@ const controllersApiMyProfileEdit = async (req, res) => {
       stripUnknown: true
     })
 
-    await uploadFileAsync(verifiedEditData, req)
-
     // Retrieve existing user data from the database
     const dbData = await prisma.user.findUnique({
       where: {
@@ -54,6 +52,14 @@ const controllersApiMyProfileEdit = async (req, res) => {
         id: req.session.user.id
       }
     })
+
+    // This takes user email, strips it from any special characters (such as @/,/- etc), and passes it to the uploadFileAsync, where it gets attached to the avatar image. This is due to S3 bucket shares all of the users profile pictures, and if they are all named avatar, they keep getting overwritten by a different user. The final result is emailaddressgmailcom-avatar.extension.
+    const userEmail = dbData.email
+    const userEmailLettersOnly = userEmail.split('').filter((element) => /[a-zA-Z]/.test(element)).join('')
+
+    // To proceed without waiting for file upload to s3, use without await.
+    // To wait for file to finish uploading to s3, use await
+    await uploadFileAsync(userEmailLettersOnly, verifiedEditData, req) // add this line!
 
     // Update existing user with new values
     const editUser = await prisma.user.update({

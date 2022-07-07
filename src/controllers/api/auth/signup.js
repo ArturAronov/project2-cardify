@@ -55,13 +55,19 @@ const controllersApiAuthSignup = async (req, res) => {
       stripUnknown: true
     })
 
-    await uploadFileAsync(verifiedData, req)
+    // This takes user email, strips it from any special characters (such as @/,/- etc), and passes it to the uploadFileAsync, where it gets attached to the avatar image. This is due to S3 bucket shares all of the users profile pictures, and if they are all named avatar, they keep getting overwritten by a different user. The final result is emailaddressgmailcom-avatar.extension.
+    const userEmail = verifiedData.email
+    const userEmailLettersOnly = userEmail.split('').filter((element) => /[a-zA-Z]/.test(element)).join('')
+
+    // To proceed without waiting for file upload to s3, use without await.
+    // To wait for file to finish uploading to s3, use await
+    await uploadFileAsync(userEmailLettersOnly, verifiedData, req) // add this line!
 
     const newUser = await prisma.user.create({
       data: {
         name: verifiedData.name,
         email: verifiedData.email,
-        avatar: verifiedData.avatar || 'https://lab-restful-api.s3.ap-northeast-2.amazonaws.com/profile.jpeg',
+        avatar: verifiedData.avatar || 'https://unit-2-cardify.s3.ap-northeast-1.amazonaws.com/avatar.jpg',
         passwordHash: await bcrypt.hash(verifiedData.password, 10),
         dateCreated: new Date()
       }

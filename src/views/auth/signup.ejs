@@ -2,7 +2,7 @@
 <%- contentFor('scripts') %>
 <script>
   const generateForm = ({ user, errors } = {}) => {
-    return `
+    const $form = (`
       <div class="container w-75 pt-5">
         <h3 class="text-center">
           Sign Up
@@ -70,12 +70,31 @@
             aria-describedby="inputGroup-sizing-default"
           >
           <div class="invalid-feedback">${errors?.passwordConfirmation || ''}</div>
+           <label
+            for="user-avatar"
+            class="form-label m-0 pt-3"
+          >
+            Avatar
+          </label>
+          <input
+            type="file"
+            id="user-avatar"
+            class="form-control"
+            name="avatar"
+          ></input>
           <div class="row justify-content-center">
             <button class="btn btn-primary m-2" type="submit" style='width: 100px'>Submit</button>
           </div>
         </form>
       </div>
-    `
+    `)
+
+    if (user?.avatar?.constructor?.name === 'File') {
+      const $avatar = $('#user-avatar').attr('class', `form-control ${errors?.avatar && 'is-invalid'}`)
+      $form.find('#user-avatar').replaceWith($avatar)
+    }
+
+    return $form
   }
 
   const handleSignup = e => {
