@@ -53,8 +53,8 @@
               <div id="answer-status" ></div>
               <div id="correct-answer"></div>
             </div>
-            <form class="px-3" id="play-flashcard-form">
-              <input id="input-answer" placeholder="answer input" name="answer" type="text" class="form-control" autocomplete="off">
+            <form id="input-form" class="px-3" id="play-flashcard-form">
+              <input id="input-answer" placeholder="answer input" name="answer" type="text" class="form-control" autocomplete="off" autofocus>
               <div class="d-flex justify-content-between my-3" id="submit-form">
                 <button id="skip-answer-button" type="button" class="btn btn-outline-primary" style="width: 88px">Skip</button>
                 <button id='submit-answer-button' class="btn btn-primary" type="submit" style="width: 88px">Submit</button>
@@ -71,6 +71,7 @@
     const $page = $('#pages-collections-play')
     const $play = generatePlayPage(info)
     $page.html('').append($play).hide().fadeIn('slow')
+    $('input[name="answer"]').focus();
   }
 
   // Retrieves the collection name, that is used in the card header, from the collection database
