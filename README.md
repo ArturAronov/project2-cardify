@@ -14,9 +14,9 @@ The inspiration for this project comes from the use of paper flashcard as a mean
 - HTML5
 
 ### Production Site
-[Cardify](https://gentle-plains-13426.herokuapp.com/)
-Demo Username: example@example.com
-Demo Password: 111111
+[Cardify](https://gentle-plains-13426.herokuapp.com/)    
+Demo Username: example@example.com   
+Demo Password: 111111    
 
 ### Installation Guide
 - Clone the folder `$ git clone git@github.com:ArturAronov/project2-cardify.git`
@@ -77,6 +77,26 @@ Demo Password: 111111
 |collection       |Collection   |@relation(fields: [collectionId], references: [id], onDelete: Cascade)|
 |collectionId     |Int          |                                             |
 
+
+### Pages
+|Method   | URL                               |Corresponding File                               |Correspondinding View                |AUTH?  |
+|---------|-----------------------------------|-------------------------------------------------|-------------------------------------|-------|
+|GET      |/                                  |src/controllers/pages/show.js                    |src/views/show.ejs                   |FALSE  |
+|GET      |/auth/signup                       |src/controllers/pages/auth/signup.js             |src/views/auth/signup.ejs            |FALSE  |
+|GET      |/auth/login                        |src/controllers/pages/auth/login.js              |src/views/auth/login.ejs             |FALSE  |
+|         |                                   |                                                 |                                     |       |
+|GET      |/my/profile                        |src/controllers/pages/my/profile/show.js         |src/views/my/profile/show.ejs        |TRUE   |
+|GET      |/my/profile/edit                   |src/controllers/pages/my/profile/edit.js         |src/views/my/profile/edit.ejs        |TRUE   |  
+|         |                                   |                                                 |                                     |       |
+|GET      |/my/collections                    |src/controllers/pages/my/collections/show.js     |src/views/my/collections/show.ejs    |TRUE   |  
+|GET      |/my/collections/create             |src/controllers/pages/my/collections/create.js   |src/views/my/collections/create.ejs  |TRUE   |  
+|GET      |/my/collections/:id/update         |src/controllers/pages/my/collections/update.js   |src/views/my/collections/update.ejs  |TRUE   |  
+|         |                                   |                                                 |                                     |       |
+|GET      |/my/collections/:id/flashcards     |src/controllers/pages/my/flashcards/show.js      |src/views/my/flashcards/show.ejs     |TRUE   |  
+|GET      |/my/collections/:id/show           |src/controllers/pages/my/flashcards/new.js       |src/views/my/flashcards/new.ejs      |TRUE   |  
+|GET      |/my/collections/:id/flashcards/:id |src/controllers/pages/my/flashcards/update.js    |src/views/my/flashcards/update.ejs   |TRUE   |  
+|         |                                   |                                                 |                                     |       |
+|GET      |/my/collections/:id/play           |src/controllers/pages/my/collections/play.js     |src/views/my/collections/play.ejs    |TRUE   |  
 
 ### API
 |Method   |URL                                                    |Corresponding File                           |AUTH?    |Expected Error       |User Data                                                       |Response                                                                  |
