@@ -30,7 +30,7 @@ Demo Password: 111111
 - Run `$ npx prisma migrate dev`
 
 ### Prisma Schema
-- User
+- User    
 |Field            |Type         |Attribute                    |
 |:----------------|:------------|:----------------------------|
 |id               |Int          |@id @default(autoincrement())|
