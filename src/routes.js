@@ -49,7 +49,6 @@ router.get('/my/collections/:id/flashcards/:id', authenticateUser('html'), (awai
 
 // PAGES | PLAY | AUTH REQUIRED
 router.get('/my/collection/:id/play', authenticateUser('html'), (await import('./controllers/pages/my/collections/play.js')).default)
-router.get('/my/play', authenticateUser('html'), (await import('./controllers/pages/my/play.js')).default)
 
 // PAGES | PAGE NOT FOUND
 router.use((await import('./controllers/pages/not-found.js')).default)
