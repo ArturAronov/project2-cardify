@@ -8,11 +8,12 @@ const s3 = new AWS.S3({
   region: process.env.S3_REGION
 })
 
-const uploadFileAsync = async (data, { files }) => {
+const uploadFileAsync = async (user, data, { files }) => {
   const fileKeys = Object.keys(files)
 
   const promises = []
 
+  console.log(user)
   for (let i = 0; i < fileKeys.length; i += 1) {
     const key = fileKeys[i]
     const file = files[key]
@@ -20,6 +21,9 @@ const uploadFileAsync = async (data, { files }) => {
     if (_.get(data, key)) {
       // Read content from the file
       const fileContent = fs.readFileSync(file.filepath)
+
+      // Reassign name to avatar. + the extension to avoid any bugs that might occure when users upload files that have whitespace in the name
+      file.newFilename = `${user}-avatar.${file.newFilename.split('.').reverse()[0]}`
 
       // Setting up S3 upload parameters
       const params = {
