@@ -47,7 +47,35 @@ Demo Password: 111111
 |Collection       |Collection[] |                             |   
 
 
-- Collection
+- Collection    
+
+|Field            |Type         |Attribute                                    |
+|-----------------|-------------|---------------------------------------------|
+|id               |Int          |@id @default(autoincrement())                |
+|title            |String       |                                             |
+|description      |String?      |                                             |
+|dateCreated      |DateTime?    |                                             |
+|dateUpdated      |DateTime?    |                                             |
+|createdBy        |User         |@relation(fields: [userId], references: [id])|
+|userId           |Int          |                                             |
+|Card             |Card[]       |                                             |
+
+
+- Card    
+
+|Field            |Type         |Attribute                                    |
+|-----------------|-------------|---------------------------------------------|
+|id               |Int          |                                             |
+|question         |String       |                                             |
+|answer           |String       |                                             |
+|right            |Int          |@default(0)                                  |
+|wrong            |Int          |@default(0)                                  |
+|dateCreated      |DateTime?    |                                             |
+|dateUpdated      |DateTime?    |                                             |
+|createdBy        |User         |@relation(fields: [userId], references: [id])|
+|userId           |Int          |                                             |
+|collection       |Collection   |@relation(fields: [collectionId], references: [id], onDelete: Cascade)|
+|collectionId     |Int          |                                             |
 
 
 
