@@ -78,8 +78,27 @@ Demo Password: 111111
 |collectionId     |Int          |                                             |
 
 
-
-
+### API
+|Method   |URL                                                    |Corresponding File                           |AUTH?    |
+|---------|-------------------------------------------------------|---------------------------------------------|---------|
+|POST     |/api/auth/signup                                       |src/controllers/api/auth/signup.js           |FALSE    |
+|POST     |/api/auth/login                                        |src/controllers/api/auth/login.js            |FALSE    |
+|DELETE   |/api/auth/logout                                       |src/controllers/api/auth/logout.js           |FALSE    |
+|         |                                                       |                                             |         |
+|GET      |/api/my/profile                                        |src/controllers/api/my/profile/show.js       |TRUE     |
+|PUT      |/api/my/profile/update                                 |src/controllers/api/my/profile/update.js     |TRUE     |
+|         |                                                       |                                             |         |
+|POST     |/api/my/collections                                    |src/controllers/api/my/collections/create.js |TRUE     |
+|GET      |/api/my/collections                                    |src/controllers/api/my/collections/show.js   |TRUE     |
+|PUT      |/api/my/collections/:id                                |src/controllers/api/my/collections/update.js |TRUE     |
+|DELETE   |/api/my/collections/:id                                |src/controllers/api/my/collections/delete.js |TRUE     |
+|         |                                                       |                                             |         |
+|POST     |/api/my/play/:id                                       |src/controllers/api/my/collections/play.js   |TRUE     |
+|         |                                                       |                                             |         |
+|POST     |/api/my/collections/:id/flashcards                     |src/controllers/api/my/flashcards/create.js  |TRUE     |
+|GET      |/api/my/collections/:id/flashcards                     |src/controllers/api/my/flashcards/show.js    |TRUE     |
+|PUT      |/api/collections/:collectionId/flashcards/:flashcardId |src/controllers/api/my/flashcards/update.js  |TRUE     |
+|DELETE   |/api/collections/:collectionId/flashcards/:flashcardId |src/controllers/api/my/flashcards/delete.js  |TRUE     |
 
 
 
