@@ -13,7 +13,6 @@ const uploadFileAsync = async (user, data, { files }) => {
 
   const promises = []
 
-  console.log(user)
   for (let i = 0; i < fileKeys.length; i += 1) {
     const key = fileKeys[i]
     const file = files[key]
