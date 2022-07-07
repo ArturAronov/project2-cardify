@@ -105,7 +105,7 @@
     const data = new FormData(e.target)
     axios({
       method: 'PUT',
-      url: '/api/my/profile/edit',
+      url: '/api/my/profile/update',
       data
     }).then(() => {
       window.location.href = '/my/profile'
